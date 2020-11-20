@@ -110,9 +110,10 @@ def Load_coords():
     coords = df.values.tolist()
     # update to load random points from nodelist
     coord =[]
-    for _ in range(8):
-        x = random.randint(0,len(coords))
-        coord.append(coords[x])
+    for _ in range(0,8):
+        r = random.randint(0,len(coords)-1)
+        print(r)
+        coord.append(coords[r])
 
     #print(coord)
     #n = pd.read_csv('nodelist.csv',usecols=['node'])
