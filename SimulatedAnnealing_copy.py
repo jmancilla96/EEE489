@@ -9,7 +9,7 @@ TODO
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import random
 
 def generate_coords(n):
     coords = []
@@ -34,7 +34,8 @@ def get_total_distance(coords):
 
 
 # Simulated annealing
-def SA(T=30,factor=0.99,it1=1000,it2=50):
+def SA(T=30,factor=0.99,it1=1000,it2=50,plot=False):
+    #nodes, coords = Load_coords()
     coords = Load_coords()
     cost0 = get_total_distance(coords)
     #T = 30
@@ -72,8 +73,8 @@ def SA(T=30,factor=0.99,it1=1000,it2=50):
         cost.append(cost0)
         it.append(i)
         t.append(T)     
-
-    plot_tour(coords, cost, it, t)
+    if (plot):
+        plot_tour(coords, cost, it, t)
     """
     for p1,p2 in zip(coords[:-1], coords[1:]): 
         print([p1[0], p2[0]], [p1[1], p2[1]],'\n')
@@ -104,10 +105,20 @@ def SA(T=30,factor=0.99,it1=1000,it2=50):
 #df = pd.DataFrame(coords)
 #df.to_csv('coords.csv', index=False)
 def Load_coords():
-    df = pd.read_csv('coords.csv')
+    #df = pd.read_csv('coords.csv')
+    df = pd.read_csv('nodelist.csv',usecols=['x','y'])
     coords = df.values.tolist()
-    #print(coords)
-    return(coords)
+    # update to load random points from nodelist
+    coord =[]
+    for _ in range(8):
+        x = random.randint(0,len(coords))
+        coord.append(coords[x])
+
+    #print(coord)
+    #n = pd.read_csv('nodelist.csv',usecols=['node'])
+    #nodes = n.values.tolist()
+    return(coord)
+    #return(nodes, coord)
 
 # Plot
 def plot_tour(coords,cost,it,t):
@@ -163,7 +174,7 @@ def plot_tour(coords,cost,it,t):
     
     plt.show()
    
-#m = SA()
+#m = SA(plot=True)
 #SA(30,0.99,1000,500)
 #print(m)
 

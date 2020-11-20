@@ -25,15 +25,18 @@ dst = np.array([1000,600])
 vec = np.array([])
 
 import SimulatedAnnealing_copy
+m = SimulatedAnnealing_copy.SA(plot=True)
+#print(m)
 #coords=SimulatedAnnealing_copy.SA()
 #z1=int(np.dot(coords[0][0],720))
 #z2=int(np.dot(coords[0][1],720)) 
 #print(z1)
 #print(z2)
 # print(coords[1])
-import Path_Single_copy
-pa,coords,d = Path_Single_copy.graph_path(plot=False)
-print(coords[1][1])
+#import Path_Single_copy
+#pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=False)
+#print(coords[1][1])
+
 def BT_connect():
     startTime = time.time()
     #Look for all Bluetooth devices the computer knows about.
@@ -177,11 +180,30 @@ def controls(q):
 
 
 def calc_dst(q):
+    ##
+    #import SimulatedAnnealing_copy
+    #m = SimulatedAnnealing_copy.SA(plot=True)
+    #m = SimulatedAnnealing_copy.SA(plot=False)
+    ##
+    
     i=0
+    b=0
+    ##
+    import Path_Single_copy
+    #pa,coords,d = Path_Single_copy.graph_path(plot=False)
+    pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=False)
+    ##
     #z1=int(np.dot(coords[0][0],720))
     #z2=int(np.dot(coords[0][1],720))
     while True:
-        
+        ##
+        if i == (len(coords)):
+            #import Path_Single_copy
+            #pa,coords,d = Path_Single_copy.graph_path(plot=False)
+            b+=1
+            pa,coords,d = Path_Single_copy.graph_path(m[b],m[b+1],plot=False)
+            i=0
+        ##
         #z1=int(np.dot(coords[i][0],720))
         #z2=int(np.dot(coords[i][1],720))
         #z1=int(coords[i][0])
@@ -225,8 +247,14 @@ def calc_dst(q):
         #i+=1
         
         #cv2.circle(frame, (dst[0], dst[1]), 5, (255,0,0), -1)
-        cv2.circle(frame, (z1, z2), 5, (255,0,0), -1)
-        
+        cv2.circle(frame, (z1, z2), 5, (255,0,255), -1)
+        ## draw nodes on path
+        for j in range(len(coords)):
+
+            p1=int(np.dot(coords[j][0],0.25)+100)
+            p2=int(np.dot(coords[j][1],0.25)+100)
+            cv2.circle(frame, (p1, p2), 5, (255,0,255), 1)
+        ##
         #cv2.circle(frame, (1000, 600), 5, (255,0,0), -1)
 
         cv2.imshow('frame', frame)
