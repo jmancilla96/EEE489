@@ -36,7 +36,8 @@ def get_total_distance(coords):
 # Simulated annealing
 def SA(T=30,factor=0.99,it1=1000,it2=50,plot=False):
     #nodes, coords = Load_coords()
-    coords = Load_coords()
+    #coords = Load_coords()
+    m,coords = Load_coords() # m is for loading ful nodelist
     cost0 = get_total_distance(coords)
     #T = 30
     #factor = 0.99
@@ -92,7 +93,7 @@ def SA(T=30,factor=0.99,it1=1000,it2=50,plot=False):
     ax4.plot(it, t, 'b')
     """
     #plt.show()
-    return coords    
+    return (m,coords)    
 
 
 
@@ -118,8 +119,8 @@ def Load_coords():
     #print(coord)
     #n = pd.read_csv('nodelist.csv',usecols=['node'])
     #nodes = n.values.tolist()
-    return(coord)
-    #return(nodes, coord)
+    #return(coord)
+    return(coords, coord)
 
 # Plot
 def plot_tour(coords,cost,it,t):

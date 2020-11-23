@@ -17,15 +17,15 @@ distCoeffs =  np.array([[ -0.11558785,  0.67470449,  0.0093756,  -0.01775784, -1
 
 
 cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH,1280)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH,640)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT,480)
 rvec = np.array([])
 tvec = np.array([])
 dst = np.array([1000,600])
 vec = np.array([])
 
 import SimulatedAnnealing_copy
-m = SimulatedAnnealing_copy.SA(plot=True)
+g,m = SimulatedAnnealing_copy.SA(plot=True)
 #print(m)
 #coords=SimulatedAnnealing_copy.SA()
 #z1=int(np.dot(coords[0][0],720))
@@ -34,7 +34,7 @@ m = SimulatedAnnealing_copy.SA(plot=True)
 #print(z2)
 # print(coords[1])
 #import Path_Single_copy
-#pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=False)
+#pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=True)
 #print(coords[1][1])
 
 def BT_connect():
@@ -208,8 +208,8 @@ def calc_dst(q):
         #z2=int(np.dot(coords[i][1],720))
         #z1=int(coords[i][0])
         #z2=int(coords[i][1])
-        z1=int(np.dot(coords[i][0],0.25)+100)
-        z2=int(np.dot(coords[i][1],0.25)+100)
+        z1=int(np.dot(coords[i][0],0.15)+10)
+        z2=int(np.dot(coords[i][1],0.15)+10)
         ret, frame = cap.read()
         val = aruco_detect(frame)
         if val is not None and len(val) > 0:
@@ -251,11 +251,19 @@ def calc_dst(q):
         ## draw nodes on path
         for j in range(len(coords)):
 
-            p1=int(np.dot(coords[j][0],0.25)+100)
-            p2=int(np.dot(coords[j][1],0.25)+100)
+            p1=int(np.dot(coords[j][0],0.15)+10)
+            p2=int(np.dot(coords[j][1],0.15)+10)
             cv2.circle(frame, (p1, p2), 5, (255,0,255), 1)
         ##
         #cv2.circle(frame, (1000, 600), 5, (255,0,0), -1)
+        ##
+        ## draw nodes on map
+        for k in range(len(g)):
+
+            g1=int(np.dot(g[k][0],0.15)+10)
+            g2=int(np.dot(g[k][1],0.15)+10)
+            cv2.circle(frame, (g1, g2), 5, (0,0,255), 1)
+        ##
 
         cv2.imshow('frame', frame)
         #key = cv2.waitKey(1)

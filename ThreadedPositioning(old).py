@@ -12,7 +12,8 @@ startTime = time.time()
 print ("Searching for devices...")
 print ("")
 #Create an array with all the MAC addresses of the detected devices
-nearby_devices = bluetooth.discover_devices()
+nearby_devices = bluetooth.discover_devices(duration=10)
+#nearby_devices = bluetooth.discover_devices(duration=10, lookup_names=1, flush_cache=1)
 
 #Run through all the devices found and list their name
 num = 0
