@@ -107,7 +107,7 @@ def SA(T=30,factor=0.99,it1=1000,it2=50,plot=False):
 #df.to_csv('coords.csv', index=False)
 def Load_coords():
     #df = pd.read_csv('coords.csv')
-    df = pd.read_csv('nodelist.csv',usecols=['x','y'])
+    df = pd.read_csv('new_nodelist.csv',usecols=['x','y'])
     coords = df.values.tolist()
     # update to load random points from nodelist
     coord =[]

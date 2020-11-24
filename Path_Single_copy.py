@@ -22,11 +22,11 @@ def coord2Node(G,x,y):
 
 def graph_path(n0,nf, plot=False ):
     #read edge list
-    edges = pd.read_csv('Edgelist_updated.csv')
+    edges = pd.read_csv('new_Edgelist_update.csv')
     #add edges from edgelist
     G = nx.from_pandas_edgelist(edges, 'node1', 'node2', ['distance'])
     #read node list
-    nodes = pd.read_csv('nodelist.csv')
+    nodes = pd.read_csv('new_nodelist.csv')
 
     # add nodes to graph
     data = nodes.set_index('node').to_dict('index').items()

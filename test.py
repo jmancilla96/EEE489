@@ -191,7 +191,8 @@ def calc_dst(q):
     ##
     import Path_Single_copy
     #pa,coords,d = Path_Single_copy.graph_path(plot=False)
-    pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=False)
+    #pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=False)
+    pa,coords,d = Path_Single_copy.graph_path(m[1],m[0],plot=False)
     ##
     #z1=int(np.dot(coords[0][0],720))
     #z2=int(np.dot(coords[0][1],720))
@@ -201,20 +202,22 @@ def calc_dst(q):
             #import Path_Single_copy
             #pa,coords,d = Path_Single_copy.graph_path(plot=False)
             b+=1
-            pa,coords,d = Path_Single_copy.graph_path(m[b],m[b+1],plot=False)
+            #pa,coords,d = Path_Single_copy.graph_path(m[b],m[b+1],plot=False)
+            pa,coords,d = Path_Single_copy.graph_path(m[b+1],m[b],plot=False)
             i=0
         ##
         #z1=int(np.dot(coords[i][0],720))
         #z2=int(np.dot(coords[i][1],720))
-        z1=int(coords[i][0])
-        z2=int(coords[i][1])
-        #z1=int(np.dot(coords[i][0],0.15)+10)
-        #z2=int(np.dot(coords[i][1],0.15)+10)
+        #z1=int(coords[i][0])
+        #z2=int(coords[i][1])
+        z1=int(np.dot(coords[i][1],0.15)+20)
+        z2=int(np.dot(coords[i][0],0.15)+20)
         ret, frame = cap.read()
         val = aruco_detect(frame)
         if val is not None and len(val) > 0:
             #vec1, vec2 = (dst[0]-val[1], dst[1]-val[2])
-            vec1, vec2 = (z1-val[1], z2-val[2])
+            #vec1, vec2 = (z1-val[1], z2-val[2])
+            vec1, vec2 = (z2-val[2], z1-val[1])
             #print(vec1, vec2)
             theta = math.atan2(vec2,vec1)*180/3.14 # angle between vector(marker->dst) and x-axis
             if theta < 0 :
@@ -250,21 +253,19 @@ def calc_dst(q):
         cv2.circle(frame, (z1, z2), 5, (255,0,255), -1)
         ## draw nodes on path
         for j in range(len(coords)):
-            p1=int(coords[j][0])
-            p2=int(coords[j][1])
-            #p1=int(np.dot(coords[j][0],0.15)+10)
-            #p2=int(np.dot(coords[j][1],0.15)+10)
-            cv2.circle(frame, (p1, p2), 5, (255,0,255), 1)
+
+            p1=int(np.dot(coords[j][0],0.15)+20)
+            p2=int(np.dot(coords[j][1],0.15)+20)
+            cv2.circle(frame, (p2, p1), 5, (255,0,255), 1)
         ##
         #cv2.circle(frame, (1000, 600), 5, (255,0,0), -1)
         ##
         ## draw nodes on map
         for k in range(len(g)):
-            g1=int(g[k][0])
-            g2=int(g[k][1])
-            #g1=int(np.dot(g[k][0],0.15)+10)
-            #g2=int(np.dot(g[k][1],0.15)+10)
-            cv2.circle(frame, (g1, g2), 5, (0,0,255), 1)
+
+            g1=int(np.dot(g[k][0],0.15)+20)
+            g2=int(np.dot(g[k][1],0.15)+20)
+            cv2.circle(frame, (g2, g1), 5, (0,0,255), 1)
         ##
 
         cv2.imshow('frame', frame)
