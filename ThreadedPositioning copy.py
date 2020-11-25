@@ -25,7 +25,7 @@ dst = np.array([1000,600])
 vec = np.array([])
 
 import SimulatedAnnealing_copy
-g,m = SimulatedAnnealing_copy.SA(plot=True)
+#g,m = SimulatedAnnealing_copy.SA(plot=True)
 #print(m)
 #coords=SimulatedAnnealing_copy.SA()
 #z1=int(np.dot(coords[0][0],720))
@@ -176,18 +176,24 @@ def controls(q):
 #            sock.send(data)
 
 
-
+# Program to find Closest number in a list 
+def closest_node(node, nodes):
+    nodes = np.asarray(nodes)
+    dist_2 = np.sum((nodes - node)**2, axis=1)
+    return np.argmin(dist_2)
 
 
 def calc_dst(q):
     ##
     #import SimulatedAnnealing_copy
     #m = SimulatedAnnealing_copy.SA(plot=True)
-    #m = SimulatedAnnealing_copy.SA(plot=False)
+    g,m = SimulatedAnnealing_copy.SA(plot=False)
     ##
     
     i=0
     b=0
+    cn=0
+    c_n=m[-1]
     ##
     import Path_Single_copy
     #pa,coords,d = Path_Single_copy.graph_path(plot=False)
@@ -201,6 +207,13 @@ def calc_dst(q):
             #import Path_Single_copy
             #pa,coords,d = Path_Single_copy.graph_path(plot=False)
             b+=1
+            
+            if b == (len(m)-1):
+                c_n=g[cn]
+                g,m = SimulatedAnnealing_copy.SA(plot=False)
+                b=0
+                m.insert(0,c_n)
+            
             pa,coords,d = Path_Single_copy.graph_path(m[b],m[b+1],plot=False)
             i=0
         ##
@@ -242,7 +255,9 @@ def calc_dst(q):
             #   q.put(phi)
             # else: 
             #   pass
-        
+            ## find closest node and print on to screen
+            cn=closest_node((val[1],val[2]),g)
+            cv2.putText(frame, "closest node {}".format(cn), (10,50), cv2.FONT_HERSHEY_SIMPLEX, 1, (209, 80, 0, 255), 3) #font stroke
         #print(val)
         #i+=1
         
@@ -254,7 +269,7 @@ def calc_dst(q):
             p2=int(coords[j][1])
             #p1=int(np.dot(coords[j][0],0.15)+10)
             #p2=int(np.dot(coords[j][1],0.15)+10)
-            cv2.circle(frame, (p1, p2), 5, (255,0,255), 1)
+            cv2.circle(frame, (p1, p2), 5, (255,0,255), -1)
         ##
         #cv2.circle(frame, (1000, 600), 5, (255,0,0), -1)
         ##

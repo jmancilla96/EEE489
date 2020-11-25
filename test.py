@@ -25,7 +25,7 @@ dst = np.array([1000,600])
 vec = np.array([])
 
 import SimulatedAnnealing_copy
-g,m = SimulatedAnnealing_copy.SA(plot=True)
+#g,m = SimulatedAnnealing_copy.SA(plot=True)
 #print(m)
 #coords=SimulatedAnnealing_copy.SA()
 #z1=int(np.dot(coords[0][0],720))
@@ -123,7 +123,12 @@ def controls(q):
     while True:
         phi = q.get()
         print(phi)
-        
+        if (phi=="d"):
+            print(phi)
+            sock.close()
+            print("disconnected")
+            break
+
         if phi < 5:
             data = "A"
             sock.send(data)
@@ -176,23 +181,28 @@ def controls(q):
 #            sock.send(data)
 
 
-
+# Program to find Closest number in a list 
+def closest_node(node, nodes):
+    nodes = np.asarray(nodes)
+    dist_2 = np.sum((nodes - node)**2, axis=1)
+    return np.argmin(dist_2)
 
 
 def calc_dst(q):
     ##
     #import SimulatedAnnealing_copy
     #m = SimulatedAnnealing_copy.SA(plot=True)
-    #m = SimulatedAnnealing_copy.SA(plot=False)
+    g,m = SimulatedAnnealing_copy.SA(plot=False)
     ##
     
     i=0
     b=0
+    cn=0
+    c_n=m[-1]
     ##
     import Path_Single_copy
     #pa,coords,d = Path_Single_copy.graph_path(plot=False)
-    #pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=False)
-    pa,coords,d = Path_Single_copy.graph_path(m[1],m[0],plot=False)
+    pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=False)
     ##
     #z1=int(np.dot(coords[0][0],720))
     #z2=int(np.dot(coords[0][1],720))
@@ -202,22 +212,27 @@ def calc_dst(q):
             #import Path_Single_copy
             #pa,coords,d = Path_Single_copy.graph_path(plot=False)
             b+=1
-            #pa,coords,d = Path_Single_copy.graph_path(m[b],m[b+1],plot=False)
-            pa,coords,d = Path_Single_copy.graph_path(m[b+1],m[b],plot=False)
+            
+            if b == (len(m)-1):
+                c_n=g[cn]
+                g,m = SimulatedAnnealing_copy.SA(plot=False)
+                b=0
+                m.insert(0,c_n)
+            
+            pa,coords,d = Path_Single_copy.graph_path(m[b],m[b+1],plot=False)
             i=0
         ##
         #z1=int(np.dot(coords[i][0],720))
         #z2=int(np.dot(coords[i][1],720))
-        #z1=int(coords[i][0])
-        #z2=int(coords[i][1])
-        z1=int(np.dot(coords[i][1],0.15)+20)
-        z2=int(np.dot(coords[i][0],0.15)+20)
+        z1=int(coords[i][0])
+        z2=int(coords[i][1])
+        #z1=int(np.dot(coords[i][0],0.15)+10)
+        #z2=int(np.dot(coords[i][1],0.15)+10)
         ret, frame = cap.read()
         val = aruco_detect(frame)
         if val is not None and len(val) > 0:
             #vec1, vec2 = (dst[0]-val[1], dst[1]-val[2])
-            #vec1, vec2 = (z1-val[1], z2-val[2])
-            vec1, vec2 = (z2-val[2], z1-val[1])
+            vec1, vec2 = (z1-val[1], z2-val[2])
             #print(vec1, vec2)
             theta = math.atan2(vec2,vec1)*180/3.14 # angle between vector(marker->dst) and x-axis
             if theta < 0 :
@@ -245,7 +260,9 @@ def calc_dst(q):
             #   q.put(phi)
             # else: 
             #   pass
-        
+            ## find closest node and print on to screen
+            cn=closest_node((val[1],val[2]),g)
+            cv2.putText(frame, "closest node {}".format(cn), (10,50), cv2.FONT_HERSHEY_SIMPLEX, 1, (209, 80, 0, 255), 3) #font stroke
         #print(val)
         #i+=1
         
@@ -253,19 +270,21 @@ def calc_dst(q):
         cv2.circle(frame, (z1, z2), 5, (255,0,255), -1)
         ## draw nodes on path
         for j in range(len(coords)):
-
-            p1=int(np.dot(coords[j][0],0.15)+20)
-            p2=int(np.dot(coords[j][1],0.15)+20)
-            cv2.circle(frame, (p2, p1), 5, (255,0,255), 1)
+            p1=int(coords[j][0])
+            p2=int(coords[j][1])
+            #p1=int(np.dot(coords[j][0],0.15)+10)
+            #p2=int(np.dot(coords[j][1],0.15)+10)
+            cv2.circle(frame, (p1, p2), 5, (255,0,255), -1)
         ##
         #cv2.circle(frame, (1000, 600), 5, (255,0,0), -1)
         ##
         ## draw nodes on map
         for k in range(len(g)):
-
-            g1=int(np.dot(g[k][0],0.15)+20)
-            g2=int(np.dot(g[k][1],0.15)+20)
-            cv2.circle(frame, (g2, g1), 5, (0,0,255), 1)
+            g1=int(g[k][0])
+            g2=int(g[k][1])
+            #g1=int(np.dot(g[k][0],0.15)+10)
+            #g2=int(np.dot(g[k][1],0.15)+10)
+            cv2.circle(frame, (g1, g2), 5, (0,0,255), 1)
         ##
 
         cv2.imshow('frame', frame)
@@ -273,24 +292,41 @@ def calc_dst(q):
         #if key==27:
         if cv2.waitKey(1) == 27:
             #sock.send("Z")
+            q.put("d")
+            #print(q.get())
             break
         #return phi
 
 
 
 
+
 q=queue.Queue(maxsize=1)
 phi=0
-t1=Thread(target=calc_dst, args=(q,))
-#t2=Thread(target=controls, args=(q,))
+#calc_dst(q)
+
+#cap.release()
+#cv2.destroyAllWindows()
 
 
-t1.start()
-#t2.start()
+#q=queue.Queue(maxsize=1)
+#phi=0
+#t1=Thread(target=calc_dst, args=(q,))
+t2=Thread(target=controls, args=(q,))
 
-t1.join()
-#t2.join()
 
+#t1.start()
+t2.start()
+calc_dst(q)
+##
+#q.join()
+print('All work completed')
+##
+#t1.join()
+t2.join()
+##
+print('disconnected')
+##
 
 cap.release()
 cv2.destroyAllWindows()
