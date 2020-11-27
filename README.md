@@ -1,5 +1,6 @@
 # TODO
 - Calibrate raspberry pi camera for better Aruco detection
+- Setup autoconnect to BT04-A
 - merge test.py to ThreadedPositioning.py (currently using test.py as main file)
 - Update nodes and edges to include points of interest and traffic with POI.csv
 - Make functions for external use
@@ -16,6 +17,16 @@
 
 ## Structure and data path 
 - Output from SimulatedAnnealing.py-> Path_single.py -> test.py
+
+
+# Requirements
+- Matplotlib
+- Numpy
+- Opencv-contrib-python
+- Networkx
+- Pybluez
+- pandas
+
 
 # To run
 For testing on personal machine
