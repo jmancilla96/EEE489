@@ -34,7 +34,7 @@ def get_total_distance(coords):
 
 
 # Simulated annealing
-def SA(T=30,factor=0.99,it1=1000,it2=50,plot=False):
+def SA(T=30,factor=0.99,it1=1000,it2=50,plot=False,save=False):
     #nodes, coords = Load_coords()
     #coords = Load_coords()
     m,coords = Load_coords() # m is for loading ful nodelist
@@ -75,7 +75,7 @@ def SA(T=30,factor=0.99,it1=1000,it2=50,plot=False):
         it.append(i)
         t.append(T)     
     if (plot):
-        plot_tour(coords, cost, it, t)
+        plot_tour(coords, cost, it, t, save)
     """
     for p1,p2 in zip(coords[:-1], coords[1:]): 
         print([p1[0], p2[0]], [p1[1], p2[1]],'\n')
@@ -126,7 +126,7 @@ def Load_coords():
     return(coords, coord)
 
 # Plot
-def plot_tour(coords,cost,it,t):
+def plot_tour(coords,cost,it,t,save=False):
     #coords = Load_coords()
     fig = plt.figure(figsize=(8.6,6.4))
     plt.subplots_adjust( wspace=0.2,hspace = 0.4)
@@ -178,8 +178,10 @@ def plot_tour(coords,cost,it,t):
     ax4.plot(it, t, 'b')
     
     plt.show()
+    if (save):
+        fig.savefig("SA.jpg")
    
-#m = SA(plot=True)
+#m = SA(plot=True,save=True)
 #SA(30,0.99,1000,500)
 #print(m)
 

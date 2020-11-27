@@ -24,6 +24,15 @@ tvec = np.array([])
 dst = np.array([1000,600])
 vec = np.array([])
 
+
+# Below VideoWriter object will create 
+# a frame of above defined The output  
+# is stored in 'filename.avi' file. 
+record=0 #set to 1 to record
+if (record):
+    result = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*'MJPG'), 10, (640,480)) 
+
+
 import SimulatedAnnealing_copy
 #g,m = SimulatedAnnealing_copy.SA(plot=True)
 #print(m)
@@ -192,7 +201,7 @@ def calc_dst(q):
     ##
     #import SimulatedAnnealing_copy
     #m = SimulatedAnnealing_copy.SA(plot=True)
-    g,m = SimulatedAnnealing_copy.SA(plot=False)
+    g,m = SimulatedAnnealing_copy.SA(plot=False,save=False)
     ##
     
     i=0
@@ -202,7 +211,7 @@ def calc_dst(q):
     ##
     import Path_Single_copy
     #pa,coords,d = Path_Single_copy.graph_path(plot=False)
-    pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=False)
+    pa,coords,d = Path_Single_copy.graph_path(m[0],m[1],plot=False,save=False)
     ##
     #z1=int(np.dot(coords[0][0],720))
     #z2=int(np.dot(coords[0][1],720))
@@ -215,11 +224,11 @@ def calc_dst(q):
             
             if b == (len(m)-1):
                 c_n=g[cn]
-                g,m = SimulatedAnnealing_copy.SA(plot=False)
+                g,m = SimulatedAnnealing_copy.SA(plot=False,save=False)
                 b=0
                 m.insert(0,c_n)
             
-            pa,coords,d = Path_Single_copy.graph_path(m[b],m[b+1],plot=False)
+            pa,coords,d = Path_Single_copy.graph_path(m[b],m[b+1],plot=False,save=False)
             i=0
         ##
         #z1=int(np.dot(coords[i][0],720))
@@ -288,6 +297,12 @@ def calc_dst(q):
         ##
 
         cv2.imshow('frame', frame)
+        
+        # Write the frame into the 
+        # file 'filename.avi' 
+        if (record):
+            result.write(frame)
+        
         #key = cv2.waitKey(1)
         #if key==27:
         if cv2.waitKey(1) == 27:

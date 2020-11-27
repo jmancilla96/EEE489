@@ -20,7 +20,7 @@ def coord2Node(G,x,y):
     print(nod)
     return(nod)
 
-def graph_path(n0,nf, plot=False ):
+def graph_path(n0,nf, plot=False ,save=False):
     #read edge list
     edges = pd.read_csv('new_Edgelist_update.csv')
     #add edges from edgelist
@@ -66,10 +66,12 @@ def graph_path(n0,nf, plot=False ):
     ax1.set_ylabel('y')
 
     # overlay map
-    img = plt.imread("map.jpg")
+    img = plt.imread("map1.jpg")
     ax1.imshow(img)
     if (plot):
         plt.show()
+        if (save):
+            fig.savefig("path.jpg")
 
     # print out the shortest path using Bellman Ford
     #path=nx.bellman_ford_path(G,'c1_1','c4_3',weight='distance')
