@@ -46,7 +46,7 @@ def SA(T=30,factor=0.99,it1=1000,it2=50,plot=False,save=False):
     cost = []
     t = []
     for i in range(it1):#1000
-        print(i,'cost = ', cost0)
+        #print(i,'cost = ', cost0)
         
         T = T*factor
         for j in range(it2):#500
@@ -74,8 +74,8 @@ def SA(T=30,factor=0.99,it1=1000,it2=50,plot=False,save=False):
         cost.append(cost0)
         it.append(i)
         t.append(T)     
-    if (plot):
-        plot_tour(coords, cost, it, t, save)
+    if (plot or save):
+        plot_tour(coords, cost, it, t, plot, save)
     """
     for p1,p2 in zip(coords[:-1], coords[1:]): 
         print([p1[0], p2[0]], [p1[1], p2[1]],'\n')
@@ -126,7 +126,7 @@ def Load_coords():
     return(coords, coord)
 
 # Plot
-def plot_tour(coords,cost,it,t,save=False):
+def plot_tour(coords,cost,it,t,plot=False,save=False):
     #coords = Load_coords()
     fig = plt.figure(figsize=(8.6,6.4))
     plt.subplots_adjust( wspace=0.2,hspace = 0.4)
@@ -176,12 +176,12 @@ def plot_tour(coords,cost,it,t,save=False):
 
     ax3.plot(it, cost, 'b')
     ax4.plot(it, t, 'b')
-    
-    plt.show()
+    if (plot):
+        plt.show()
     if (save):
         fig.savefig("SA.jpg")
    
-#m = SA(plot=True,save=True)
+#m = SA(plot=False,save=True)
 #SA(30,0.99,1000,500)
 #print(m)
 

@@ -201,7 +201,7 @@ def calc_dst(q):
     ##
     #import SimulatedAnnealing_copy
     #m = SimulatedAnnealing_copy.SA(plot=True)
-    g,m = SimulatedAnnealing_copy.SA(plot=False,save=False)
+    g,m = SimulatedAnnealing_copy.SA(plot=False,save=True)
     ##
     
     i=0
