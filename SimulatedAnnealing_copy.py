@@ -134,11 +134,13 @@ def plot_tour(coords,cost,it,t,plot=False,save=False):
     ax1.set_title('random path')
     ax1.set_xlabel('x')
     ax1.set_ylabel('y')
+    ax1.invert_yaxis()
 
     ax2 = fig.add_subplot(222)
     ax2.set_title('path')
     ax2.set_xlabel('x')
     ax2.set_ylabel('y')
+    ax2.invert_yaxis()
 
     ax3 = fig.add_subplot(223)
     ax3.set_title('Cost (Total distance)')
@@ -161,10 +163,10 @@ def plot_tour(coords,cost,it,t,plot=False,save=False):
     # add points to plot
     for c in coords:
         ax1.plot(c[0], c[1], 'ro')
-
-        for p1,p2 in zip(coords[:-1], coords[1:]): 
-            #print([p1[0], p2[0]], [p1[1], p2[1]],'\n')
-            ax2.plot([p1[0], p2[0]], [p1[1], p2[1]], 'b') #draw line between coords
+    
+    for p1,p2 in zip(coords[:-1], coords[1:]): 
+        #print([p1[0], p2[0]], [p1[1], p2[1]],'\n')
+        ax2.plot([p1[0], p2[0]], [p1[1], p2[1]], 'b') #draw line between coords
 
 
     
